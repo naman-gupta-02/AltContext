@@ -1,0 +1,116 @@
+{
+  "args": {
+    "config": "configs/default.json",
+    "run_name": "D_context",
+    "train_subset": "train_5k",
+    "val_subset": "val",
+    "context_mode": "with_context",
+    "context_dropout": 0.0,
+    "epochs": null,
+    "max_steps": null,
+    "lr": null,
+    "grad_accum": null,
+    "eval_every": null,
+    "val_loss_n": null,
+    "seed": 13,
+    "device": null,
+    "resume": true,
+    "inspect_only": false,
+    "no_feature_cache": false,
+    "runs_dir": "/Users/namangupta/Downloads/AltContext/runs"
+  },
+  "config": {
+    "model": {
+      "base_model_id": "HuggingFaceTB/SmolVLM-256M-Instruct",
+      "base_model_revision": "7e3e67edbbed1bf9888184d9df282b700a323964",
+      "dtype": "float32"
+    },
+    "processor": {
+      "do_image_splitting": false,
+      "longest_edge": 512,
+      "note": "Concadia images are 256x256; one 512px global view = 64 image tokens. Splitting would upscale to 17 tiles (~1100 tokens) with no extra detail."
+    },
+    "context": {
+      "max_words": 200,
+      "max_chars": 1000,
+      "caption_max_words": 60,
+      "heading_max_words": 20,
+      "title_max_words": 20,
+      "field_order": [
+        "caption",
+        "heading",
+        "paragraph",
+        "page_title"
+      ]
+    },
+    "generation": {
+      "brief": {
+        "max_new_tokens": 60,
+        "do_sample": false,
+        "num_beams": 1,
+        "repetition_penalty": 1.1
+      },
+      "detailed": {
+        "max_new_tokens": 160,
+        "do_sample": false,
+        "num_beams": 1,
+        "repetition_penalty": 1.1
+      }
+    },
+    "data": {
+      "seed": 13,
+      "milestone_n": 100,
+      "tiny_n": 20,
+      "pilot_n": 300,
+      "train_n": 5000,
+      "val_n": 300,
+      "test_n": 500
+    },
+    "lora": {
+      "r": 8,
+      "alpha": 16,
+      "dropout": 0.05,
+      "target_modules_regex": "^model\\.text_model\\.layers\\.\\d+\\.self_attn\\.(q_proj|k_proj|v_proj|o_proj)$"
+    },
+    "training": {
+      "learning_rate": 0.0001,
+      "per_device_batch_size": 1,
+      "grad_accum_steps": 16,
+      "epochs": 1,
+      "warmup_ratio": 0.05,
+      "weight_decay": 0.0,
+      "max_grad_norm": 1.0,
+      "eval_every_steps": 50,
+      "save_every_steps": 50,
+      "val_loss_n": 100
+    }
+  },
+  "param_info": {
+    "trainable_params": 921600,
+    "total_params": 257406528,
+    "trainable_pct": 0.358,
+    "lora_modules": 120,
+    "feature_cache_check": {
+      "loss_pixels": 1.814616084098816,
+      "loss_cached": 1.814616084098816,
+      "dir": "/Users/namangupta/Downloads/AltContext/data/cache/image_features_5fd85f3ec432"
+    }
+  },
+  "train_ids_sha256": "b5d8df1ae2b4912b1a4c892dfe5a44116cd319987ff89ed0a0f3b6ab2cbd536a",
+  "val_ids_sha256": "5edb0d5820873a1e652d6e2823f72e48cfd3c08bbaa2f537a28046817988425c",
+  "n_train": 5000,
+  "n_val_loss": 100,
+  "total_optimizer_steps": 313,
+  "warmup_steps": 15,
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "device": "mps",
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor_name": "Apple M1"
+  },
+  "checkpoint_selection": "lowest validation loss on the fixed val_loss_n examples"
+}

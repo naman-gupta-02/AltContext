@@ -1,0 +1,21 @@
+# Core (exact versions of the measured setup are in requirements.lock.txt)
+torch>=2.4
+torchvision
+transformers>=4.50
+peft>=0.14
+accelerate
+safetensors
+pillow
+numpy
+num2words
+# Data preparation
+datasets
+imagehash
+gdown
+# Backend
+fastapi
+uvicorn[standard]
+python-multipart
+# Tests
+pytest
+httpx

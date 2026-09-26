@@ -1,0 +1,97 @@
+{
+  "raw_count": 96918,
+  "accepted_count": 94906,
+  "excluded_count": 2012,
+  "exclusions": {
+    "target_too_short": 1745,
+    "placeholder_target": 146,
+    "target_too_long": 121
+  },
+  "accepted_by_split": {
+    "train": 76030,
+    "validation": 9415,
+    "test": 9461
+  },
+  "raw_by_split": {
+    "train": 77534,
+    "validation": 9693,
+    "test": 9691
+  },
+  "flags_among_accepted": {
+    "exact_duplicate": 17071,
+    "near_duplicate": 17153,
+    "target_equals_caption": 8511,
+    "target_in_caption": 1576,
+    "target_in_paragraph": 270,
+    "exact_duplicate_cross_split": 3259,
+    "near_duplicate_cross_split": 3351,
+    "overlaps_test_image": 1277
+  },
+  "duplicates": {
+    "exact_md5": {
+      "groups": 8081,
+      "records": 20676,
+      "cross_split_groups": 1110
+    },
+    "near_phash": {
+      "groups": 8138,
+      "records": 20854,
+      "cross_split_groups": 1141
+    },
+    "near_method": "imagehash.phash identical (Hamming 0)"
+  },
+  "target_words": {
+    "median": 10,
+    "p95": 40
+  },
+  "paragraph_words": {
+    "median": 95,
+    "p95": 242
+  },
+  "subset_sizes": {
+    "train_5k": 5000,
+    "pilot": 300,
+    "tiny": 20,
+    "val": 300,
+    "milestone_100": 100,
+    "test": 500
+  },
+  "subset_rules": "accepted, not flagged for target leakage or test-image overlap, at least one of caption/paragraph, unique image within subset; seed=13",
+  "inspected_examples": [
+    {
+      "id": "concadia_35670",
+      "page_title": "List of Seattle Mariners team records",
+      "caption": "Ichiro Suzuki, the holder of five single-season batting records for the Mariners",
+      "target_description": "Ichiro Suzuki in a Mariners uniform",
+      "context_head": "Single-season batting recordsStatisticPlayerRecordSeasonRef(s)Batting averageIchiro Suzuki.3722004Home runsKen Griffey, Jr.56*1997, 1998RBIKen Griffey, Jr.1471997RunsAlex Rodriguez1411996HitsIchiro Suzuki2622004SinglesIchiro Suzuki2252004DoublesAlex Rodriguez541996TriplesIchiro Suzuki122005Stolen basesHarold Reynolds601987At batsIchiro Suzuki7042004Slugging percentageKen Griffey, Jr..6741994Extra-base hitsKen Griffey, Jr.931997Total basesKen Griffey, Jr.3931997On-base percentageEdgar Martnez.4791995OPSEdgar Martnez1.1071995WalksEdgar Martnez1231996StrikeoutsMike Cameron1762002"
+    },
+    {
+      "id": "concadia_79462",
+      "page_title": "List of D.C. United records and statistics",
+      "caption": "D.C. United players, including Ben Olsen and Luciano Emilio, look for a corner kick against Real Madrid",
+      "target_description": "Six soccer players in black and five in white views from above look up for a moving soccer ball coming toward them.",
+      "context_head": "5 times: Jaime Moreno: (1997), (1999), (2004), (2005), (2006) 4 times: Marco Etcheverry: (1996), (1997), (1998), (1999) 3 times: Christian Gmez: (2005), (2006), (2007)"
+    },
+    {
+      "id": "concadia_85986",
+      "page_title": "List of songs recorded by Pink Martini",
+      "caption": "Pink Martini's lead vocalist and songwriter China Forbes performing in 2006",
+      "target_description": "A woman wearing a black-and-white printed dress, standing behind a microphone with her arms extended.",
+      "context_head": "The group's founder Thomas Lauderdale performing in 2008 Michael Feinstein provides vocals on the track \"How Long Will It Last?\", originally by Max Lief and Joseph Meyer."
+    },
+    {
+      "id": "concadia_47921",
+      "page_title": "List of birds of Singapore",
+      "caption": "Collared kingfisher (Todiramphus chloris) - Nee Soon Forest",
+      "target_description": "Collared kingfisher",
+      "context_head": "Kingfishers are medium-sized birds with large heads, long, pointed bills, short legs and stubby tails. Common kingfisher (Alcedo atthis) - C/WV - water edgesRufous-collared kingfisher (Actenoides concretus) - Ex/RBBlue-eared kingfisher (Alcedo meninting) - R/RB - BBNP, CCNR, HNP, NTL, Poyan,"
+    },
+    {
+      "id": "concadia_63586",
+      "page_title": "First Church in Albany (Reformed)",
+      "caption": "The 1715 church",
+      "target_description": "A worn illustration of a building with a tall peaked roof topped with a cupola",
+      "context_head": "Three years later the church began its mission to the Mohawks, the Native American tribe in the area. It continued for almost 50 years and baptized over 300 converts. In 1715 the church built a larger, hip-roofed stone church around"
+    }
+  ]
+}

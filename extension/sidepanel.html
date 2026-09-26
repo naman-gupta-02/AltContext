@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AltContext</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header class="top">
+    <h1>AltContext</h1>
+    <p id="service" class="service" data-state="unknown">Checking the local service…</p>
+  </header>
+
+  <main>
+    <section aria-labelledby="controls-h" class="controls">
+      <h2 id="controls-h" class="visually-hidden">Controls</h2>
+      <button id="scan" type="button" class="primary">Scan this page for images</button>
+
+      <fieldset>
+        <legend>Description length</legend>
+        <label><input type="radio" name="mode" value="brief" checked> Brief</label>
+        <label><input type="radio" name="mode" value="detailed"> Detailed</label>
+      </fieldset>
+      <label class="check"><input type="checkbox" id="use-context" checked> Use nearby page text as context</label>
+      <p class="hint">Descriptions are generated only when you ask. Existing alt text on the page is never changed.</p>
+    </section>
+
+    <div id="status" role="status" aria-live="polite" class="status"></div>
+
+    <section aria-labelledby="images-h">
+      <h2 id="images-h">Images</h2>
+      <p id="empty" class="hint">No scan yet. Use “Scan this page for images”.</p>
+      <ol id="images" class="images"></ol>
+    </section>
+  </main>
+
+  <footer class="bottom">
+    <a href="options.html" target="_blank" id="settings-link">Settings (service address and token)</a>
+  </footer>
+
+  <template id="image-item">
+    <li class="image">
+      <h3 class="image-title"></h3>
+      <div class="row">
+        <img class="thumb" alt="">
+        <dl class="facts"></dl>
+      </div>
+      <div class="actions">
+        <button type="button" class="describe"></button>
+        <button type="button" class="cancel" hidden>Cancel</button>
+        <button type="button" class="show secondary">Show on page</button>
+      </div>
+      <div class="result" hidden>
+        <p class="result-label"></p>
+        <p class="result-text"></p>
+        <details class="result-context"><summary>Context that was sent</summary><pre></pre></details>
+        <button type="button" class="copy secondary">Copy description</button>
+      </div>
+      <p class="error" role="alert" hidden></p>
+    </li>
+  </template>
+
+  <script src="sidepanel.js" type="module"></script>
+</body>
+</html>

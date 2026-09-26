@@ -1,0 +1,58 @@
+{
+  "model": "SmolVLM-256M-Instruct@7e3e67ed",
+  "subset": "milestone_100",
+  "n": 100,
+  "cold_load_seconds": 4.14,
+  "latency_ms": {
+    "image_only": {
+      "median": 1488.55,
+      "p95": 2209.0
+    },
+    "with_context": {
+      "median": 2137.35,
+      "p95": 2493.5
+    }
+  },
+  "mean_words": {
+    "reference": 14.89,
+    "image_only": 32.71,
+    "with_context": 37.8
+  },
+  "peak_device_memory_mb": 1484.71875,
+  "reference_found_in_context": 0,
+  "processor": {
+    "do_image_splitting": false,
+    "longest_edge": 512,
+    "note": "Concadia images are 256x256; one 512px global view = 64 image tokens. Splitting would upscale to 17 tiles (~1100 tokens) with no extra detail."
+  },
+  "context_cfg": {
+    "max_words": 200,
+    "max_chars": 1000,
+    "caption_max_words": 60,
+    "heading_max_words": 20,
+    "title_max_words": 20,
+    "field_order": [
+      "caption",
+      "heading",
+      "paragraph",
+      "page_title"
+    ]
+  },
+  "generation": {
+    "max_new_tokens": 60,
+    "do_sample": false,
+    "num_beams": 1,
+    "repetition_penalty": 1.1
+  },
+  "environment": {
+    "python": "3.12.14",
+    "torch": "2.14.0",
+    "transformers": "5.17.0",
+    "peft": "0.21.0",
+    "device": "mps",
+    "platform": "macOS-27.0-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor_name": "Apple M1"
+  },
+  "timestamp": "2026-09-26 15:32:31"
+}

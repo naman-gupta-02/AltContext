@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "AltContext",
+  "version": "0.1.0",
+  "description": "On-request, context-aware image descriptions from a model running on your own computer.",
+  "minimum_chrome_version": "116",
+  "action": {
+    "default_title": "Open AltContext",
+    "default_icon": {"16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png"}
+  },
+  "icons": {"16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png"},
+  "background": {"service_worker": "service_worker.js", "type": "module"},
+  "side_panel": {"default_path": "sidepanel.html"},
+  "options_page": "options.html",
+  "permissions": ["activeTab", "scripting", "sidePanel", "storage"],
+  "host_permissions": ["http://127.0.0.1/*", "http://localhost/*"],
+  "optional_host_permissions": ["https://*/*", "http://*/*"],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {"default": "Alt+Shift+A"},
+      "description": "Open the AltContext panel"
+    }
+  }
+}

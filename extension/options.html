@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>AltContext settings</title>
+  <link rel="stylesheet" href="sidepanel.css">
+  <style>main { max-width: 560px; } label { display: block; font-weight: 600; margin-top: 14px; } input[type=text], input[type=password] { width: 100%; font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }</style>
+</head>
+<body>
+  <main>
+    <h1>AltContext settings</h1>
+    <form id="form">
+      <label for="backendUrl">Local service address</label>
+      <input type="text" id="backendUrl" placeholder="http://127.0.0.1:8765" autocomplete="off">
+      <p class="hint">Only loopback addresses (127.0.0.1 or localhost) are allowed.</p>
+      <label for="token">Service token</label>
+      <input type="password" id="token" autocomplete="off">
+      <p class="hint">Printed in the terminal when you run <code>python -m backend.app</code>, and stored in <code>~/.altcontext/token</code>.</p>
+      <p><button type="submit" class="primary">Save</button></p>
+      <p id="msg" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

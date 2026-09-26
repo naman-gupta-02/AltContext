@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+# Large or third-party data stays out of Git
+data/raw/
+data/cache/
+data/processed/manifest.jsonl
+# Training runs: keep configs/summaries, drop heavy checkpoint state
+runs/**/trainer_state.pt
+runs/**/checkpoint-*/
+runs/tiny_fit/
+runs/pilot/
+demo/site/
+*.log
+AltContext_Project_Guide.pdf
