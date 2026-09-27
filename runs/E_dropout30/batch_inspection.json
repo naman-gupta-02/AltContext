@@ -1,0 +1,62 @@
+[
+  {
+    "id": "concadia_94755",
+    "input_ids_shape": [
+      1,
+      111
+    ],
+    "pixel_values_shape": [
+      1,
+      1,
+      3,
+      512,
+      512
+    ],
+    "num_image_tokens": 64,
+    "num_supervised_tokens": 11,
+    "decoded_prompt_tail": "<image><image><image><image><image><image><image><image><image><fake_token_around_image>Describe this image concisely for someone who cannot see it.\nDo not invent objects, actions, identities, or properties.<end_of_utterance>\nAssistant:",
+    "decoded_supervised": " Madeon performing in 2015.<end_of_utterance>",
+    "target": "Madeon performing in 2015.",
+    "mask_check_passed": true
+  },
+  {
+    "id": "concadia_102794",
+    "input_ids_shape": [
+      1,
+      116
+    ],
+    "pixel_values_shape": [
+      1,
+      1,
+      3,
+      512,
+      512
+    ],
+    "num_image_tokens": 64,
+    "num_supervised_tokens": 16,
+    "decoded_prompt_tail": "<image><image><image><image><image><image><image><image><image><fake_token_around_image>Describe this image concisely for someone who cannot see it.\nDo not invent objects, actions, identities, or properties.<end_of_utterance>\nAssistant:",
+    "decoded_supervised": " A masked man is pinned down by an interrogator with a knife.<end_of_utterance>",
+    "target": "A masked man is pinned down by an interrogator with a knife.",
+    "mask_check_passed": true
+  },
+  {
+    "id": "concadia_20336",
+    "input_ids_shape": [
+      1,
+      336
+    ],
+    "pixel_values_shape": [
+      1,
+      1,
+      3,
+      512,
+      512
+    ],
+    "num_image_tokens": 64,
+    "num_supervised_tokens": 13,
+    "decoded_prompt_tail": " and political experiments with few resources, Satin is playing the role of the holy \"Fool\" for his time.\nPage title: Mark Satin\n</context><end_of_utterance>\nAssistant:",
+    "decoded_supervised": " Stern-looking middle-age man speaking into a microphone.<end_of_utterance>",
+    "target": "Stern-looking middle-age man speaking into a microphone.",
+    "mask_check_passed": true
+  }
+]

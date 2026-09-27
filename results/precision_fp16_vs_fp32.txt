@@ -1,0 +1,5 @@
+identical outputs 195 / 200
+CIDEr fp32 0.398 fp16 0.402
+fp32 median 835.45 p95 1420.2
+fp16 median 763.65 p95 1270.0
+fp16 peak MB 1316.09375

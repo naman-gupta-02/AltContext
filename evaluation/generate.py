@@ -56,6 +56,9 @@ def main():
     ap.add_argument("--name", help="output name; defaults to <condition>_<subset>[_<variant>]")
     ap.add_argument("--out-dir", default=str(ROOT / "results" / "predictions"))
     ap.add_argument("--device")
+    ap.add_argument("--model-id", help="override the base model (e.g. HuggingFaceTB/SmolVLM-500M-Instruct)")
+    ap.add_argument("--revision", help="base model revision for --model-id")
+    ap.add_argument("--dtype", choices=["float32", "float16", "bfloat16"])
     args = ap.parse_args()
 
     if args.condition in "CD" and not args.adapter:
@@ -64,6 +67,11 @@ def main():
         raise SystemExit("conditions A and B use the original model; do not pass --adapter")
 
     cfg = load_config(args.config)
+    if args.model_id:
+        cfg["model"]["base_model_id"] = args.model_id
+        cfg["model"]["base_model_revision"] = args.revision or "main"
+    if args.dtype:
+        cfg["model"]["dtype"] = args.dtype
     rows = load_subset(args.subset)[: args.limit]
     variant = args.context_variant or ("correct" if CONDITION_USES_CONTEXT[args.condition] else "none")
     name = args.name or f"{args.condition}_{args.subset}" + (f"_{variant}" if args.context_variant else "") + ("_detailed" if args.mode == "detailed" else "")
@@ -112,7 +120,7 @@ def main():
                 print(f"  {k + 1}/{len(todo)}  {g['latency_ms']:.0f}ms  {g['text'][:80]}")
 
     write_json(out_path.with_suffix(".meta.json"), {
-        "name": name, "condition": args.condition, "adapter": args.adapter, "subset": args.subset, "n": len(rows),
+        "name": name, "condition": args.condition, "adapter": args.adapter, "base_model": cfg["model"],  "subset": args.subset, "n": len(rows),
         "context_variant": variant, "mode": args.mode, "model_version": lm.version,
         "cold_load_seconds": round(lm.load_seconds, 2), "peak_device_memory_mb": peak_memory_mb(lm.device),
         "generation": cfg["generation"][args.mode], "processor": cfg["processor"], "context_cfg": cfg["context"],

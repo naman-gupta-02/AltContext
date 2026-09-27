@@ -140,7 +140,9 @@ def main():
     if args.preds:
         stems = {Path(n).stem.split("_")[0]: Path(n).stem for n in args.preds}
         pairs = [("A", "B", "Does adding context to the original model help?"), ("A", "C", "Does task fine-tuning help without context?"),
-                 ("B", "D", "Does contextual fine-tuning improve on contextual prompting?"), ("C", "D", "How do the two trained approaches compare?")]
+                 ("B", "D", "Does contextual fine-tuning improve on contextual prompting?"), ("C", "D", "How do the two trained approaches compare?"),
+                 ("D", "E", "Does context dropout (30%) change the contextual adapter?"), ("D", "Dseed2", "How much does a second training seed move the result?"),
+                 ("A", "A500", "Does the 500M original model beat 256M (image only)?"), ("B", "B500", "Does the 500M original model beat 256M (with context)?")]
         md += ["", "Paired bootstrap (2000 resamples over the same examples); difference = second minus first.", "", "| Comparison | Question | ΔCIDEr-D [95% CI] | ΔBERTScore F1 [95% CI] | ΔCLIPScore [95% CI] |", "|---|---|---|---|---|"]
         for x, y, q in pairs:
             if x in stems and y in stems:
