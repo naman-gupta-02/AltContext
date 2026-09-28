@@ -97,14 +97,42 @@ The same images were described with the correct context, no context, and context
 
 D is much less distracted than B, but it is **not grounded**. With irrelevant context it still pulls names and topics from the text into 35.5% of outputs. For example, a photo of an inscription in hieroglyphs described as *"A zonkey in Tijuana, Mexico"*, and a battlefield map described as *"A map of the lungs of a patient"*. With correct context, D sometimes states identities or places it cannot see: *"Former United States President Ronald Reagan is pictured smiling…"*, and *"A map of Wellington County, New Zealand"*, where "New Zealand" is invented. Prompt instructions alone do not prevent this, as the build guide anticipated.
 
+### Follow-up experiments (same 500 test examples)
+
+| Run | What changed from D | CIDEr-D | BERTScore F1 | CLIPScore | Words |
+|---|---|---|---|---|---|
+| D | (reference) | 0.449 | 0.871 | 0.709 | 10.0 |
+| D, seed 2 | Training seed 14 instead of 13 | 0.453 | 0.870 | 0.706 | 10.3 |
+| E | 30% of training examples see the image-only prompt (context dropout) | 0.454 | 0.871 | 0.717 | 10.9 |
+| A500 | Original **SmolVLM-500M**, image only | 0.214 | 0.863 | 0.737 | 19.3 |
+| B500 | Original **SmolVLM-500M**, image + context | 0.337 | 0.848 | 0.724 | 25.6 |
+
+| Comparison | ΔCIDEr-D [95% CI] | ΔBERTScore F1 | ΔCLIPScore |
+|---|---|---|---|
+| D seed 2 vs D | +0.004 [−0.024, +0.033] | −0.001 [−0.002, +0.000] | −0.003 [−0.007, +0.001] |
+| E vs D | +0.006 [−0.043, +0.052] | +0.000 [−0.001, +0.001] | +0.009 [+0.004, +0.014] |
+| A500 vs A (256M) | +0.098 [+0.056, +0.141] | +0.014 [+0.013, +0.016] | +0.039 [+0.029, +0.048] |
+| B500 vs B (256M) | +0.193 [+0.112, +0.278] | +0.005 [+0.001, +0.009] | −0.012 [−0.023, +0.001] |
+
+**What these runs show**
+
+- **Seed stability.** A second training seed reproduces D within noise on every metric. The D vs B gain is not an artifact of one seed.
+- **Context dropout (E) does not fix grounding.** It gives the same test scores, better scores with no context (CIDEr-D 0.277 vs 0.246 for D on the 200-example subset), and a small CLIPScore gain. But with shuffled context, 34.5% of E's outputs still import donor-only words (D: 35.5%; chance control 2.5%). Training only on text-level behaviour does not teach the model to reject context that contradicts the image.
+- **The 500M original model is a stronger baseline.** It beats 256M in both conditions, and with context it copies less page text (14.7% vs 22.7% of 5-grams). Even so, the fine-tuned 256M model D scores higher than untrained 500M with context (0.449 vs 0.337 CIDEr-D) at about half the memory (1.5 vs 2.9 GB peak) and lower latency. Fine-tuning the 500M model was not run (about 4–5 h on this machine).
+- **Precision.** float16 inference with the D adapter gave identical text for 195 of 200 examples, CIDEr-D 0.402 vs 0.398 (fp32), and about 9% lower median latency (764 vs 835 ms). Details are in `results/precision_fp16_vs_fp32.txt`. fp32 remains the default.
+
+Latency figures across rows are not strictly comparable. E, D seed 2 and the fp16 run were measured in a later session after a restart, when the machine was less loaded.
+
 ### Training runs
 
 | Adapter | Validation loss (100 fixed val examples), step 0 → 313 | Median step time | Peak MPS driver memory |
 |---|---|---|---|
 | C (image only) | 4.368 → 3.498 | 6.7 s / 16 examples | 1.8 GB |
 | D (image + context) | 3.549 → 2.629 | 21.2 s / 16 examples | 2.1 GB |
+| D, seed 2 | 3.549 → 2.628 | similar to D | ~2.0 GB |
+| E (context dropout 0.3) | 3.549 → 2.634 | similar to D | ~2.1 GB |
 
-Both adapters use the lowest validation loss as the selection rule, which fell at the final step (313) in both runs. The shape of each loss curve is in `runs/*/summary.json`.
+All adapters use the lowest validation loss as the selection rule, which fell at the final step (313) in every run. The shape of each loss curve is in `runs/*/summary.json`. Runs E and D seed 2 were interrupted (an out-of-memory kill by macOS, then a system restart) and resumed from saved checkpoints with `--resume`, restoring optimizer, scheduler, RNG state and data position.
 
 ### Latency and memory (Apple M1, MPS, fp32)
 
@@ -205,6 +233,7 @@ EOF
 cd ../..
 
 scripts/run_experiments.sh    # prepare → milestone → train C and D → A/B/C/D → robustness → scoring → review sheet
+scripts/run_extended.sh       # fp16 check → context dropout (E) → 500M baselines → D seed 2 → extended scoring (auto-retries/resumes)
 ```
 
 Individual stages:
@@ -246,12 +275,12 @@ Tests: `pytest` runs backend and text-processing tests with the fake model. `nod
 
 ## Limitations
 
-- **Grounding:** context can inject identities, places and topics that are not visible (see the robustness section). A mitigation the build guide suggests, context dropout (`--context-dropout`), is implemented but was not run.
+- **Grounding:** context can inject identities, places and topics that are not visible (see the robustness section). Context dropout (run E), the mitigation the build guide suggests, did not reduce this. Likely next steps are training with deliberately mismatched context paired with image-only targets, or checking generated entities against the image with a separate grounding model.
 - **Metric fit:** D's outputs are shorter than the references and follow Concadia's Wikipedia style. CIDEr-D and BERTScore reward that style, while CLIPScore favours the longer outputs of the original model. No metric certifies accessibility quality or factual accuracy.
 - **Resolution:** Concadia images are 256 × 256, so small text and fine detail are not recoverable.
 - **Scope:** v1 handles ordinary `<img>` elements only. CSS backgrounds, canvas, SVG, cross-origin iframes, charts and dense text are not supported.
 - **Hardware:** results come from one Apple M1 configuration, and latency depends on hardware, precision and input length.
-- **Not run:** a single training seed was used, and neither the 500M model nor the DOCCI/VizWiz extensions were evaluated.
+- **Not run:** fine-tuning the 500M model, more than two seeds, and the DOCCI/VizWiz extensions (skipped for disk space; the guide lists them as later work).
 
 ## Attribution
 
