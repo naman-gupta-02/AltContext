@@ -145,6 +145,30 @@ All adapters use the lowest validation loss as the selection rule, which fell at
 | Detailed mode (original model, 160 tokens) | ~5.7 s for one example |
 | Peak MPS driver memory during generation | ~1.5 GB |
 
+### Benchmark: local service end to end
+
+`scripts/benchmark.py` starts `python -m backend.app` as a subprocess for each model and sends real multipart HTTP requests, exactly as the extension does. It measures the client-side round trip, which covers upload, validation, context building, queueing, generation and the JSON response. The requests use 100 test images with caption + paragraph + page title. After 3 warm-up requests on other images, the same 100 are repeated to measure the cache. Then come 10 detailed-mode requests and a burst of 8 concurrent requests. Hardware: Apple M1, 8 GB RAM, MPS, fp32.
+
+| Model served | Cold start (spawn → ready) | Brief, uncached: median / p95 | Cached: median | Detailed: median | Brief words | Peak server RSS |
+|---|---|---|---|---|---|---|
+| Original SmolVLM-256M | 5.1 s | 1.90 / 1.96 s | 1.1 ms | 3.85 s | 38.4 | 1.38 GB |
+| **D (default)** | 7.2 s | **0.71 / 1.11 s** | 1.1 ms | 3.92 s | 10.8 | 1.69 GB |
+| E (context dropout) | 6.9 s | 0.76 / 1.42 s | 1.1 ms | 3.94 s | 11.7 | 1.41 GB |
+
+| Model served | Sequential throughput | 8 concurrent requests: total wall time |
+|---|---|---|
+| Original SmolVLM-256M | 34.4 requests/min | 13.8 s |
+| **D (default)** | **76.6 requests/min** | **5.7 s** |
+| E (context dropout) | 73.4 requests/min | 6.6 s |
+
+- The fine-tuned adapter answers about **2.7× faster** than the original model (median 0.71 s vs 1.90 s). LoRA adds almost no compute; the speed comes from its concise outputs (11 vs 38 words).
+- Cached repeats return in about 1 ms. Changing the context or mode produces a new cache entry.
+- Detailed mode always uses the original model, so it takes about 3.9 s whichever adapter is loaded.
+- The service runs one generation at a time. All 8 concurrent requests succeeded, and the last one waited for the previous seven.
+- RSS is the process's resident memory as reported by `ps`. MPS GPU allocations on unified memory may be only partly counted.
+
+Raw numbers are in `results/benchmark/benchmark.json`. To rerun: `python scripts/benchmark.py` (options: `--configs D --n 20`).
+
 ### First milestone (100 validation examples, original model)
 
 `results/milestone/` contains the comparison file described in guide §18: example ID, split, image, context, reference, both outputs, model revision, generation settings and per-condition latency. Median latency was 1.49 s image-only and 2.14 s with context. Outputs averaged 33–38 words against 15-word references.
